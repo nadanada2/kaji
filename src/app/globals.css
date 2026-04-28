@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* New refined palette */
+  --color-brand-black: #0F172A;
+  --color-brand-navy: #1E3A5F;
+  --color-brand-gold: #C9A84C;
+  --color-brand-gold-light: #F0DFA0;
+  --color-brand-white: #FAFAF8;
+  --color-brand-surface: #F4F3EF;
+  --color-brand-muted: #8892A4;
+  --color-brand-border: #E4E2DC;
+
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-jakarta);
+  /* Keep bebas alias in case used somewhere */
+  --font-bebas: var(--font-cormorant);
+}
+
+:root {
+  --background: var(--color-brand-white);
+  --foreground: var(--color-brand-black);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar refinement */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C9A84C40; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C9A84C80; }
+
+/* Selection */
+::selection { background: #C9A84C30; color: #0F172A; }
+
+/* Focus ring */
+*:focus-visible { outline: 2px solid #C9A84C; outline-offset: 2px; }
+
+/* Smooth transitions globally */
+a, button { transition: all 0.18s ease; }

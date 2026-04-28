@@ -1,0 +1,148 @@
+"use client";
+
+import { useCustomizerStore } from '../store/useCustomizerStore';
+import { Trash2, GripVertical, Eye, EyeOff, Lock, Unlock } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+
+export default function LayerManager({ fabricApi }: { fabricApi: any }) {
+  const { layers } = useCustomizerStore();
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    e.dataTransfer.setData('layer-id', id);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault(); 
+  };
+
+ const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData('layer-id');
+    
+    // 1. Basic Validation
+    if (!draggedId || draggedId === targetId || !fabricApi?.fabricRef.current) return;
+
+    const canvas = fabricApi.fabricRef.current;
+    const objects = canvas.getObjects();
+    
+    const draggedObj = objects.find((o: any) => o.id === draggedId);
+    const targetObj = objects.find((o: any) => o.id === targetId);
+
+    if (draggedObj && targetObj) {
+      // 2. Determine the target index
+      const targetZ = objects.indexOf(targetObj);
+
+      // 3. Use the Modern Fabric 6 way OR the fallback
+      if (typeof canvas.moveObjectTo === 'function') {
+        canvas.moveObjectTo(draggedObj, targetZ);
+      } else if (typeof draggedObj.moveTo === 'function') {
+        draggedObj.moveTo(targetZ);
+      } else {
+        // 4. Manual Fallback: Remove and Re-insert (Works in all versions)
+        canvas.remove(draggedObj);
+        canvas.insertAt(draggedObj, targetZ);
+      }
+
+      canvas.requestRenderAll();
+      
+      // 5. Update your Zustand store to reflect the new order
+      // (Assuming your store has a reorderLayers method)
+      // if (useCustomizerStore.getState().reorderLayers) {
+      //   useCustomizerStore.getState().reorderLayers(draggedId, targetId);
+      // }
+    }
+  };
+  const toggleVisibility = (id: string) => {
+    const canvas = fabricApi.fabricRef.current;
+    if (!canvas) return;
+    const obj = canvas.getObjects().find((o: any) => o.id === id);
+    if (obj) {
+      obj.set('visible', !obj.visible);
+      canvas.requestRenderAll();
+    }
+  };
+
+  const toggleLock = (id: string) => {
+    const canvas = fabricApi.fabricRef.current;
+    if (!canvas) return;
+    const obj = canvas.getObjects().find((o: any) => o.id === id);
+    if (obj) {
+      const locked = obj.selectable;
+      obj.set({
+        selectable: !locked,
+        evented: !locked,
+      });
+      canvas.discardActiveObject();
+      canvas.requestRenderAll();
+    }
+  };
+
+  const deleteLayer = (id: string) => {
+    const canvas = fabricApi.fabricRef.current;
+    if (!canvas) return;
+    const obj = canvas.getObjects().find((o: any) => o.id === id);
+    if (obj) {
+      canvas.remove(obj);
+      canvas.requestRenderAll();
+    }
+  };
+
+  return (
+    <div className="flex flex-col bg-white border border-[#E4E2DC] rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.02)] overflow-hidden mt-2">
+      <div className="bg-[#F9F9F9] p-4 flex items-center justify-between border-b border-[#f0f0f0] rounded-t-[24px]">
+        <h3 className="font-semibold text-lg text-[#0F172A] tracking-wider uppercase">Layers</h3>
+        <span className="text-[10px] font-bold text-[#888] uppercase bg-white px-3 py-1 border border-[#eee] rounded-full shadow-sm">
+          {layers.length} Objects
+        </span>
+      </div>
+
+      <div className="p-3 max-h-[300px] overflow-y-auto flex flex-col gap-2 bg-[#FCFCFC]">
+        <AnimatePresence>
+          {layers.length === 0 ? (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center text-[#999] text-xs py-8 font-bold"
+            >
+              No objects on canvas
+            </motion.p>
+          ) : (
+            layers.map((layer) => (
+              <motion.div
+                key={layer.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9, height: 0 }}
+                draggable
+                onDragStart={(e: any) => handleDragStart(e, layer.id)}
+                onDragOver={handleDragOver}
+                onDrop={(e: any) => handleDrop(e, layer.id)}
+                className="flex items-center gap-3 w-full bg-white p-3 rounded-[12px] border border-[#eee] hover:border-[#ddd] hover:shadow-md transition-all group cursor-grab active:cursor-grabbing"
+              >
+                <GripVertical className="w-4 h-4 text-[#CCC] group-hover:text-[#888] flex-shrink-0" />
+                
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-[#0F172A] font-bold truncate">{layer.name}</p>
+                  <p className="text-[9px] text-[#888] font-bold uppercase">{layer.type}</p>
+                </div>
+
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => toggleVisibility(layer.id)} className="p-1.5 hover:bg-[#F2F2F2] rounded-lg text-[#888] hover:text-[#0F172A] transition-colors">
+                    {layer.visible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => toggleLock(layer.id)} className="p-1.5 hover:bg-[#F2F2F2] rounded-lg text-[#888] hover:text-[#0F172A] transition-colors">
+                    {layer.locked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => deleteLayer(layer.id)} className="p-1.5 hover:bg-red-50 hover:text-red-500 rounded-lg text-[#888] transition-colors">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </motion.div>
+            ))
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
