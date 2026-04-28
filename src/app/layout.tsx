@@ -3,6 +3,8 @@ import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
+import Chatbot from '@/components/Chatbot';
+
 
 const cormorant = Cormorant_Garamond({
   weight: ["400", "500", "600"],
@@ -28,17 +30,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${cormorant.variable} ${jakarta.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${cormorant.variable} ${jakarta.variable} h-full antialiased`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
       <body className="min-h-full flex flex-col bg-brand-white text-brand-black">
         <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
+        <main className="flex-1">{children}</main>
         <Footer />
-      </body>
+        <Chatbot />
+       </body>
     </html>
   );
 }

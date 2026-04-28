@@ -223,9 +223,9 @@ export default function CustomizerLayout() {
             <div
               className="relative transition-transform duration-500 hover:scale-[1.02]"
               style={{
-                width: 300,
-                height: 620,
-              }}
+  width: "min(80vw, 300px)",
+  height: "min(160vw, 620px)",
+}}
             >
               <canvas
                 ref={fabricApi.canvasRef}
