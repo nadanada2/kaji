@@ -90,36 +90,13 @@ export default function Home() {
             <div className="hidden lg:flex justify-center">
               <div className="relative w-full max-w-sm">
                 {/* Main card */}
-                <div className="bg-white rounded-3xl p-7 border shadow-[0_20px_60px_rgba(15,23,42,0.08)]" style={{ borderColor: "#E4E2DC" }}>
-                  <div className="aspect-[3/4] rounded-2xl overflow-hidden mb-5 relative" style={{ backgroundColor: "#F4F3EF" }}>
-                    <img src="/cases/minimal.png" alt="Case preview" className="w-full h-full object-cover" />
-                    <div className="absolute top-3 right-3 bg-white/90 rounded-xl px-3 py-1.5 border" style={{ borderColor: "#E4E2DC", backdropFilter: "blur(4px)" }}>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "#C9A84C" }}>Nouveau</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-[16px]" style={{ fontFamily: "'Cormorant Garamond', serif", color: "#0F172A" }}>
-                        Minimal Series
-                      </h3>
-                      <div className="flex items-center gap-0.5 mt-0.5">
-                        {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3" fill="#C9A84C" style={{ color: "#C9A84C" }} />)}
-                      </div>
-                    </div>
-                    <span className="text-lg font-bold" style={{ color: "#1E3A5F" }}>45 TND</span>
-                  </div>
+                <div className="relative w-full max-w-sm transform scale-150 origin-center">
+                  <img src="/cases/minimal.png" alt="..." className="w-full h-full object-cover" />
                 </div>
+
+                
                 {/* Floating badge */}
-                <div className="absolute -bottom-4 -left-4 rounded-2xl px-4 py-3 shadow-lg border"
-                  style={{ backgroundColor: "#1E3A5F", borderColor: "rgba(30,58,95,0.2)" }}>
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" style={{ color: "#C9A84C" }} />
-                    <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.5)" }}>Sur mesure</p>
-                      <p className="text-[13px] font-bold text-white">Customiseur 3D</p>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>
