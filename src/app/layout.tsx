@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
 import Chatbot from '@/components/Chatbot';
+import CookieBanner from '@/components/CookieBanner';
+
 
 
 const cormorant = Cormorant_Garamond({
@@ -39,6 +41,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <Chatbot />
+        <CookieBanner />
        </body>
     </html>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
@@ -72,10 +72,22 @@ export default function ProfilePage() {
     zipCode: "",
     country: "Tunisia"
   });
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!isAuthenticated || !user) {
-    router.push("/login");
-    return null;
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
+      router.replace("/login");
+    } else {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, user, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAF8]">
+        <div className="w-12 h-12 border-4 border-[#E4E2DC] border-t-[#C9A84C] rounded-full animate-spin" />
+      </div>
+    );
   }
 
   const handleAddAddress = () => {

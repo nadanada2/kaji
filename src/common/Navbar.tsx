@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Leaf, Battery, ShoppingCart, User, LogOut, Heart, Package, ChevronDown } from "lucide-react";
+import { Leaf, Battery, ShoppingCart, User, LogOut, Heart, Package, ChevronDown, Truck } from "lucide-react";
 import { useEcoStore } from "../store/ecoStore";
 import { useCustomizerStore } from "../store/useCustomizerStore";
 import { useAuthStore } from "../store/useAuthStore";
@@ -138,6 +138,7 @@ export default function Navbar() {
                           { href: "/profile", icon: User, label: "Mon Profil" },
                           { href: "/profile#orders", icon: Package, label: "Mes Commandes" },
                           { href: "/my-designs", icon: Heart, label: "Mes Designs" },
+                          { href: "/tracking", icon: Truck, label: "Suivi commande" },
                         ].map(({ href, icon: Icon, label }) => (
                           <Link
                             key={href}
